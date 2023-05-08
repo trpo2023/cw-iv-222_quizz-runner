@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <lib/quize_run.h>
 #include <lib/quizz_create.h>
+#include <lib/quizz_run.h>
 
 #define MAX_CNT_ANSWERS 10
 
