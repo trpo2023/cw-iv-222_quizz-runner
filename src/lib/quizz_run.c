@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include <lib/quizz_create.h>
+#include <lib/quizz_data.h>
 #include <lib/quizz_run.h>
 
 #define MAX_CNT_ANSWERS 10
@@ -68,6 +69,7 @@ struct user* run_quizz(struct answers* answer,struct user* users, struct quizz* 
 	printf("Введите номер теста:\n");	
 	if(quizz_select(users)!=0)
 		printf("Не коректный ввод номера текста");
+	quiz = get_quiz(users->quizzNum);
 	for (question* i=quiz->question; i->questionText[0]!=0; i++){
 		printf("Вопрос номер %d \n", quiz->question[questionCount].questionNumber+1);
 		printf("%s \n",quiz->question[questionCount].questionText);

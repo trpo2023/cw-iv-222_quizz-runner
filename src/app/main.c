@@ -16,10 +16,9 @@ int main()
         fill_data_with_quizz(new_quizz);
     } else if (command == 2) {
         struct user* user = malloc(sizeof(*user));
-        get_username(user);
-        quizz_select(user);
+	struct answers* answ = malloc(sizeof(*answ));;
         quizz* new_quizz = malloc(sizeof(*new_quizz));
-        new_quizz = get_quiz(user->quizzNum);
+	run_quizz(answ,user,new_quizz);
     }
     return 0;
 }
