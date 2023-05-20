@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <lib/quizz_create.h>
 #include <lib/quizz_data.h>
@@ -90,8 +91,9 @@ int fill_data_with_quizz(struct quizz* q)
     if (!fp) {
         return -1;
     }
-    for (int i = 0; q->question[i].questionNumber; i++) {
-        for (int j = 0; q->question[i].answerOptions[j].optionLetter; j++) {
+    for (int i = 1; strlen(q->question[i].questionText); i++) {
+        for (int j = 1; strlen(q->question[i].answerOptions[j].optionText);
+             j++) {
             fprintf(fp,
                     "%d ,%s ,%d ,%s ,%c ,%s ,%d\n",
                     q->quizzNumber,

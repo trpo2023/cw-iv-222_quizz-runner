@@ -75,18 +75,19 @@ int get_is_option_right(quizz* new_quizz, int questionCount, int optionCount)
 quizz* create_quizz()
 {
     quizz* new_quizz = malloc(sizeof(*new_quizz));
-    int questionCount = 1;
+    int questionCount = 0;
     int optionCount = 1;
     get_quizz_name(new_quizz, questionCount);
     while (1) {
-        get_question_text(new_quizz, questionCount);
+        if (is_quit())
+            break;
+        get_question_text(new_quizz, ++questionCount);
         while (1) {
             get_option_letter(new_quizz, questionCount, optionCount);
             get_option_text(new_quizz, questionCount, optionCount);
-            get_is_option_right(new_quizz, questionCount, optionCount);
-            if (is_quit()) {
-                return new_quizz;
-            }
+            get_is_option_right(new_quizz, questionCount, optionCount++);
+            if (is_quit())
+                break;
         }
     }
     return new_quizz;
