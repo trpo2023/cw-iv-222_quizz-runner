@@ -19,9 +19,9 @@ int get_username(struct user* users, char* argument)
 int quizz_select(struct user* users, int* argument)
 {
     if (argument == NULL)
-        return 0;
+        return -1;
     users->quizzNum = *argument;
-    return -1;
+    return 0;
 }
 
 void print_answer_options(struct quizz* quiz, int questionCount)
@@ -72,7 +72,7 @@ int get_pass_percentage(
         goodAnswers += answer->isCorrect[i];
     }
     users->passPercentage = goodAnswers * 100 / allQuestion;
-    if (users->passPercentage >= 0 || users->passPercentage <= 100)
+    if (users->passPercentage >= 0 && users->passPercentage <= 100)
         return 0;
     return -1;
 }
