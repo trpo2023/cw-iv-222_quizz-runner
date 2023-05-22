@@ -109,3 +109,26 @@ int fill_data_with_quizz(struct quizz* q)
     fclose(fp);
     return 0;
 }
+
+struct user* get_user_data(char* userName, int quizzNum)
+{
+    char* file = "data/user_data.csv";
+    FILE* fp = fopen(file, "r");
+    if (!fp) {
+        return NULL;
+    }
+    char name[100];
+    int percent;
+    int number;
+    struct user* user = malloc(sizeof(*user));
+    while (fscanf(fp, "%s ,%d ,%d", name, &number, &percent) != 0) {
+        if (strcmp(name, userName) == 0 && number == quizzNum) {
+            strcpy(user->username, name);
+            user->quizzNum = number;
+            user->passPercentage = percent;
+            return user;
+        }
+    }
+    free(user);
+    return NULL;
+}
