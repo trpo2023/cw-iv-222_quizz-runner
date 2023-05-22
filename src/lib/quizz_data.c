@@ -43,7 +43,7 @@ struct quizz* get_quiz(int qNumber)
 
     q->quizzNumber = qNumber;
 
-    qNumber -= 1;
+    qNumber--;
     int number;
     while (fscanf(fp, "%d ,", &number) == 1) {
         if (number == q->quizzNumber) {
@@ -54,18 +54,20 @@ struct quizz* get_quiz(int qNumber)
                     q->quizzName[i] = name[i];
                 }
             }
-            q->question[qNumber].questionNumber = number;
+
+            q->question[number - 1].questionNumber = number;
+            number--;
             char letter;
-            fscanf(fp, "%s ,%c ,", q->question[qNumber].questionText, &letter);
+            fscanf(fp, "%s ,%c ,", q->question[number].questionText, &letter);
             if (letter >= 65 && letter <= 75) {
-                q->question[qNumber].answerOptions[letter - 65].optionLetter
+                q->question[number].answerOptions[letter - 65].optionLetter
                         = letter;
                 fscanf(fp,
                        "%s ,%d",
-                       q->question[qNumber]
+                       q->question[number]
                                .answerOptions[letter - 65]
                                .optionText,
-                       &q->question[qNumber]
+                       &q->question[number]
                                 .answerOptions[letter - 65]
                                 .isAnswerRight);
             } else {
@@ -83,31 +85,6 @@ struct quizz* get_quiz(int qNumber)
     }
     fclose(fp);
     return q;
-}
-
-int fill_data_with_quizz(struct quizz* q)
-{
-    char* file = "data/quizz_data.csv";
-    FILE* fp = fopen(file, "a");
-    if (!fp) {
-        return -1;
-    }
-    for (int i = 1; strlen(q->question[i].questionText); i++) {
-        for (int j = 1; strlen(q->question[i].answerOptions[j].optionText);
-             j++) {
-            fprintf(fp,
-                    "%d ,%s ,%d ,%s ,%c ,%s ,%d\n",
-                    q->quizzNumber,
-                    q->quizzName,
-                    q->question[i].questionNumber,
-                    q->question[i].questionText,
-                    q->question[i].answerOptions[j].optionLetter,
-                    q->question[i].answerOptions[j].optionText,
-                    q->question[i].answerOptions[j].isAnswerRight);
-        }
-    }
-    fclose(fp);
-    return 0;
 }
 
 struct user* get_user_data(char* userName, int quizzNum)
