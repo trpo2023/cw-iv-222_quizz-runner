@@ -18,13 +18,16 @@ obj/lib/quizz_run.o: src/lib/quizz_run.c
 obj/lib/quizz_data.o: src/lib/quizz_data.c
 	gcc -Wall -MMD -c -I src -o obj/lib/quizz_data.o src/lib/quizz_data.c
 
-bin/test.out: obj/test/quizz_create_test.o obj/test/quizz_run_test.o test/main.c obj/lib/lib.a
+bin/test.out: obj/test/quizz_create_test.o obj/test/quizz_run_test.o obj/test/quizz_data_test.o test/main.c obj/lib/lib.a
 	gcc -Wall -MMD -I src -I thirdparty -o $@ $^
 
 obj/test/quizz_create_test.o: test/quizz_create_test.c obj/lib/quizz_create.o 
 	gcc -Wall -MMD -c -I src -I thirdparty -o $@ $^
 
 obj/test/quizz_run_test.o: test/quizz_run_test.c obj/lib/quizz_run.o 
+	gcc -Wall -MMD -c -I src -I thirdparty -o $@ $^
+	
+obj/test/quizz_data_test.o: test/quizz_data_test.c obj/lib/quizz_data.o 
 	gcc -Wall -MMD -c -I src -I thirdparty -o $@ $^
 
 .PHONY: run
