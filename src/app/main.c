@@ -23,6 +23,7 @@ int main()
         if (user != NULL) {
             fill_data_with_user_data(user);
         }
+        free(user);
     }
     return 0;
 }

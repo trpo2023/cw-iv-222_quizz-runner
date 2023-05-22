@@ -102,8 +102,8 @@ int fill_data_with_quizz(struct quizz* q)
     if (!fp) {
         return -1;
     }
-    for (int i = 0; strlen(q->question[i].questionText); i++) {
-        for (int j = 0; strlen(q->question[i].answerOptions[j].optionText);
+    for (int i = 1; strlen(q->question[i].questionText); i++) {
+        for (int j = 1; strlen(q->question[i].answerOptions[j].optionText);
              j++) {
             *q->quizzName = replace_with_underline(q->quizzName);
             *q->question[i].questionText
@@ -147,6 +147,7 @@ struct user* get_user_data(char* userName, int quizzNum)
         }
     }
     free(user);
+    fclose(fp);
     return NULL;
 }
 
@@ -163,6 +164,7 @@ int fill_data_with_user_data(struct user* user)
             user->username,
             user->quizzNum,
             user->passPercentage);
+    fclose(fp);
     return 0;
 }
 

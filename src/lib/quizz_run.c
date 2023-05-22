@@ -81,7 +81,7 @@ struct user* run_quizz()
 {
     struct user* users = malloc(sizeof(*users));
     struct answers* answer = malloc(sizeof(*answer));
-    quizz* quiz = malloc(sizeof(*quiz));
+    quizz* quiz;
     int num = 0;
     char ch;
     char* string = malloc(100);
