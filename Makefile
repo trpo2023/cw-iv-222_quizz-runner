@@ -1,4 +1,5 @@
 all: bin/a.out
+test: bin/test.out
 
 bin/a.out: obj/lib/main.o obj/lib/lib.a
 	gcc -Wall -MMD -I src -o bin/a.out obj/lib/quizz_create.o obj/lib/quizz_run.o obj/lib/quizz_data.o obj/lib/main.o
@@ -46,7 +47,10 @@ clean:
 	rm obj/lib/*.d
 	rm obj/lib/*.a
 
-.PHONY: test
+.PHONY: testrun
 
-test: bin/test.out
+testrun: bin/test.out
 	./bin/test.out
+
+
+
