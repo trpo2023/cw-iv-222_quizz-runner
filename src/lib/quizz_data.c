@@ -49,6 +49,7 @@ struct quizz* get_quizz(int qNumber)
         if (number == q->quizzNumber) {
             char name[100];
             fscanf(fp, "%s ,%d ,", name, &number);
+            *name = replace_with_spaces(name);
             if (!q->quizzName[0]) {
                 for (int i = 0; name[i] != '\0'; i++) {
                     q->quizzName[i] = name[i];
@@ -59,6 +60,8 @@ struct quizz* get_quizz(int qNumber)
             number--;
             char letter;
             fscanf(fp, "%s ,%c ,", q->question[number].questionText, &letter);
+            *q->question[number].questionText
+                    = replace_with_spaces(q->question[number].questionText);
             if (letter >= 65 && letter <= 75) {
                 q->question[number].answerOptions[letter - 65].optionLetter
                         = letter;
@@ -70,6 +73,11 @@ struct quizz* get_quizz(int qNumber)
                        &q->question[number]
                                 .answerOptions[letter - 65]
                                 .isAnswerRight);
+                *q->question[number].answerOptions[letter - 65].optionText
+                        = replace_with_spaces(
+                                q->question[number]
+                                        .answerOptions[letter - 65]
+                                        .optionText);
             } else {
                 return NULL;
             }
@@ -87,23 +95,35 @@ struct quizz* get_quizz(int qNumber)
     return q;
 }
 
-int fill_data_with_quizz(struct quizz *q) {
-  char *file = "data/quizz_data.csv";
-  FILE *fp = fopen(file, "a");
-  if (!fp) {
-    return -1;
-  }
-  for (int i = 1; strlen(q->question[i].questionText); i++) {
-    for (int j = 1; strlen(q->question[i].answerOptions[j].optionText); j++) {
-      fprintf(fp, "%d ,%s ,%d ,%s ,%c ,%s ,%d\n", q->quizzNumber, q->quizzName,
-              q->question[i].questionNumber, q->question[i].questionText,
-              q->question[i].answerOptions[j].optionLetter,
-              q->question[i].answerOptions[j].optionText,
-              q->question[i].answerOptions[j].isAnswerRight);
+int fill_data_with_quizz(struct quizz* q)
+{
+    char* file = "data/quizz_data.csv";
+    FILE* fp = fopen(file, "a");
+    if (!fp) {
+        return -1;
     }
-  }
-  fclose(fp);
-  return 0;
+    for (int i = 0; strlen(q->question[i].questionText); i++) {
+        for (int j = 0; strlen(q->question[i].answerOptions[j].optionText);
+             j++) {
+            *q->quizzName = replace_with_underline(q->quizzName);
+            *q->question[i].questionText
+                    = replace_with_underline(q->question[i].questionText);
+            *q->question[i].answerOptions[j].optionText
+                    = replace_with_underline(
+                            q->question[i].answerOptions[j].optionText);
+            fprintf(fp,
+                    "%d ,%s ,%d ,%s ,%c ,%s ,%d\n",
+                    q->quizzNumber,
+                    q->quizzName,
+                    q->question[i].questionNumber,
+                    q->question[i].questionText,
+                    q->question[i].answerOptions[j].optionLetter,
+                    q->question[i].answerOptions[j].optionText,
+                    q->question[i].answerOptions[j].isAnswerRight);
+        }
+    }
+    fclose(fp);
+    return 0;
 }
 
 struct user* get_user_data(char* userName, int quizzNum)
@@ -142,4 +162,24 @@ int fill_data_with_user_data(struct user* user)
             user->quizzNum,
             user->passPercentage);
     return 0;
+}
+
+char replace_with_underline(char* str)
+{
+    for (int i = 0; str[i] != '\0'; i++) {
+        if (str[i] == ' ') {
+            str[i] = '_';
+        }
+    }
+    return *str;
+}
+
+char replace_with_spaces(char* str)
+{
+    for (int i = 0; str[i] != ' ' && str[i + 1] != '\0'; i++) {
+        if (str[i] == '_') {
+            str[i] = ' ';
+        }
+    }
+    return *str;
 }
