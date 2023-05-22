@@ -1,74 +1,86 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <lib/quizz_create.h>
+#include <lib/quizz_data.h>
 #include <lib/quizz_run.h>
 
-int is_quit()
+void* input(void* argument, char mode)
 {
-    printf("Заверишить ввод?\n");
-    char c;
-    scanf(" %c", &c);
-    if (c == 'y')
+    if (mode == 's') {
+        if (fgets((char*)argument, 99, stdin) == NULL)
+            return NULL;
+        else
+            delete_new_string(&argument);
+    } else if (mode == 'd') {
+        if (scanf("%d", (int*)argument) == 0)
+            return NULL;
+    } else if (mode == 'c') {
+        if (scanf(" %c", (char*)argument) == 0)
+            return NULL;
+    }
+    return argument;
+}
+
+void delete_new_string(char** string)
+{
+    for (int i = 0; (*string)[i] != '\0'; i++) {
+        if ((*string)[i] == '\n')
+            (*string)[i] = '\0';
+    }
+}
+
+int get_quizz_name(quizz* new_quizz, char* string)
+{
+    if ((strcmp(string, "quit")) == 0 || (strcmp(string, "quit\n")) == 0)
         return 1;
-    else
-        return 0;
-}
-
-int get_quizz_name(quizz* new_quizz, int questionCount)
-{
-    printf("Введите название теста, который хотите создать:\n");
-    if (scanf("%s", new_quizz->quizzName) != 0)
-        return 0;
-    else
+    else if (string == NULL)
         return -1;
-}
-
-int get_question_text(quizz* new_quizz, int questionCount)
-{
-    printf("Введите вопрос:\n");
-    if (scanf("%s", new_quizz->question[questionCount].questionText) != 0)
+    else {
+        strcpy(new_quizz->quizzName, string);
         return 0;
-    else
-        return -1;
+    }
 }
 
-int get_option_letter(quizz* new_quizz, int questionCount, int optionCount)
+int get_question_text(quizz* new_quizz, int questionCount, char* string)
 {
-    printf("Введите букву варианта ответа:\n");
-    if (scanf(" %c",
-              &new_quizz->question[questionCount]
+    if ((strcmp(string, "quit")) == 0 || (strcmp(string, "quit\n")) == 0)
+        return 1;
+    else if (string == NULL)
+        return -1;
+    else {
+        strcpy(new_quizz->question[questionCount].questionText, string);
+        return 0;
+    }
+}
+
+int get_option_text(
+        quizz* new_quizz, int questionCount, int optionCount, char* string)
+{
+    if ((strcmp(string, "next")) == 0)
+        return 1;
+    else if (string == NULL)
+        return -1;
+    else {
+        strcpy(new_quizz->question[questionCount]
                        .answerOptions[optionCount]
-                       .optionLetter)
-        != 0)
+                       .optionText,
+               string);
         return 0;
-    else
-        return -1;
+    }
 }
 
-int get_option_text(quizz* new_quizz, int questionCount, int optionCount)
+int get_is_option_right(
+        quizz* new_quizz, int questionCount, int optionCount, int num)
 {
-    printf("Введите текст варианта:\n");
-    if (scanf("%s",
-              new_quizz->question[questionCount]
-                      .answerOptions[optionCount]
-                      .optionText)
-        != 0)
+    if (num == 1 || num == 0) {
+        new_quizz->question[questionCount]
+                .answerOptions[optionCount]
+                .isAnswerRight
+                = num;
         return 0;
-    else
-        return -1;
-}
-
-int get_is_option_right(quizz* new_quizz, int questionCount, int optionCount)
-{
-    printf("1 или 0:\n");
-    if (scanf("%d",
-              &new_quizz->question[questionCount]
-                       .answerOptions[optionCount]
-                       .isAnswerRight)
-        != 0)
-        return 0;
-    else
+    } else
         return -1;
 }
 
@@ -77,18 +89,54 @@ quizz* create_quizz()
     quizz* new_quizz = malloc(sizeof(*new_quizz));
     int questionCount = 0;
     int optionCount = 1;
-    get_quizz_name(new_quizz, questionCount);
+    int result = 0;
+    int num = 0;
+    char* string = malloc(100);
+    new_quizz->quizzNumber = amount_of_quizzes() + 1;
+    printf("Введите название теста, который хотите создать: ");
+    if (input(string, 's') == NULL)
+        return NULL;
+    result = get_quizz_name(new_quizz, string);
+    if (result == -1)
+        return NULL;
+    else if (result == 1)
+        return new_quizz;
     while (1) {
-        if (is_quit())
+        optionCount = 1;
+        printf("Введите вопрос: ");
+        if (input(string, 's') == NULL)
+            return NULL;
+        result = get_question_text(new_quizz, ++questionCount, string);
+        if (result == -1)
+            return NULL;
+        else if (result == 1)
             break;
-        get_question_text(new_quizz, ++questionCount);
+        new_quizz->question[questionCount].questionNumber = questionCount;
         while (1) {
-            get_option_letter(new_quizz, questionCount, optionCount);
-            get_option_text(new_quizz, questionCount, optionCount);
-            get_is_option_right(new_quizz, questionCount, optionCount++);
-            if (is_quit())
+            printf("Введите текст варианта: ");
+            if (input(string, 's') == NULL)
+                return NULL;
+            result = get_option_text(
+                    new_quizz, questionCount, optionCount, string);
+            if (result == -1)
+                return NULL;
+            else if (result == 1)
                 break;
+            printf("1 или 0: ");
+            if (input(&num, 'd') == NULL)
+                return NULL;
+            result = get_is_option_right(
+                    new_quizz, questionCount, optionCount, num);
+            if (result == -1)
+                return NULL;
+            new_quizz->question[questionCount]
+                    .answerOptions[optionCount]
+                    .optionLetter
+                    = optionCount + 64;
+            optionCount++;
+            getchar();
         }
     }
+    free(string);
     return new_quizz;
 }
