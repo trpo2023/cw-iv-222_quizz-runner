@@ -21,6 +21,8 @@ struct quizz {
 };
 typedef struct quizz quizz;
 
+void* input(void* argument, char mode);
+
 void delete_new_string(char** string);
 
 int get_quizz_name(quizz* new_quizz, char* string);
