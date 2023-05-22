@@ -8,17 +8,19 @@
 
 #define MAX_CNT_ANSWERS 10
 
-int get_username(struct user* users)
+int get_username(struct user* users, char* argument)
 {
-    if (scanf(" %s", users->username))
-        return 0;
-    return -1;
+    if (argument == NULL)
+        return -1;
+    strcpy(users->username, argument);
+    return 0;
 }
 
-int quizz_select(struct user* users)
+int quizz_select(struct user* users, int* argument)
 {
-    if (scanf("%d", &users->quizzNum) != 0)
+    if (argument == NULL)
         return 0;
+    users->quizzNum = *argument;
     return -1;
 }
 
@@ -32,14 +34,12 @@ void print_answer_options(struct quizz* quiz, int questionCount)
     }
 }
 
-int get_answer(struct answers* results, int optionCount)
+int get_answer(struct answers* results, int optionCount, char* ch)
 {
-    char answ;
-    if (scanf(" %c", &answ) != 0) {
-        results->answer[optionCount] = answ;
-        return 0;
-    }
-    return -1;
+    if (ch == NULL)
+        return -1;
+    results->answer[optionCount] = *ch;
+    return 0;
 }
 
 int check_answers(
@@ -48,6 +48,8 @@ int check_answers(
         int questionCount,
         int optionCount)
 {
+    if (results->answer[optionCount] == 'q')
+        return 1;
     for (int i = 0; i < MAX_CNT_ANSWERS; i++) {
         if (results->answer[optionCount]
             == quiz->question[questionCount].answerOptions[i].optionLetter) {
@@ -75,29 +77,51 @@ int get_pass_percentage(
     return -1;
 }
 
-struct user*
-run_quizz(struct answers* answer, struct user* users, struct quizz* quiz)
+struct user* run_quizz()
 {
+    struct user* users = malloc(sizeof(*users));
+    struct answers* answer = malloc(sizeof(*answer));
+    quizz* quiz = malloc(sizeof(*quiz));
+    int num = 0;
+    char ch;
+    char* string = malloc(100);
     int questionCount = 0;
     int optionCount = 0;
     printf("Введите ваше имя:\n");
-    if (get_username(users) != 0)
+    if (input(string, 's') == NULL) {
         printf("Не коректный ввод имени пользователя");
+        return NULL;
+    }
+    get_username(users, string);
     printf("Введите номер теста:\n");
-    if (quizz_select(users) != 0)
+    if (input(&num, 'd') == NULL) {
         printf("Не коректный ввод номера текста");
-    quiz = get_quiz(users->quizzNum);
+        return NULL;
+        ;
+    }
+    quizz_select(users, &num);
+    quiz = get_quizz(users->quizzNum);
     for (question* i = quiz->question; i->questionText[0] != 0; i++) {
         printf("Вопрос номер %d \n",
-               quiz->question[questionCount].questionNumber + 1);
+               quiz->question[questionCount].questionNumber);
         printf("%s \n", quiz->question[questionCount].questionText);
         print_answer_options(quiz, questionCount);
         printf("Введите вариант ответа(Ответ должен быть введён с большой "
-               "буквы английского алфавита):\n");
-        if (get_answer(answer, optionCount) != 0)
+               "буквы английского алфавита. Если вы хотите завершить тест "
+               "досрочно напишите q):\n");
+        if (input(&ch, 'c') == NULL) {
             printf("Не коректный ввод варианта ответа");
-        if (check_answers(quiz, answer, questionCount, optionCount) != 0)
-            printf("В базе данных нет такого варианта ответа");
+            return NULL;
+        }
+        get_answer(answer, optionCount, &ch);
+        if (check_answers(quiz, answer, questionCount, optionCount) == -1) {
+            printf("В базе данных нет такого варианта ответа\n");
+            return NULL;
+        } else if (
+                check_answers(quiz, answer, questionCount, optionCount) == 1) {
+            printf("Завершение теста\n");
+            return NULL;
+        }
         optionCount++;
         questionCount++;
     }
@@ -105,5 +129,8 @@ run_quizz(struct answers* answer, struct user* users, struct quizz* quiz)
         printf("Ваш результат: %d из 100\n", users->passPercentage);
     else
         printf("Ошибка при подсчёте результата");
+    free(string);
+    free(answer);
+    free(quiz);
     return users;
 }
