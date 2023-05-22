@@ -88,19 +88,19 @@ struct user* run_quizz()
     int questionCount = 0;
     int optionCount = 0;
     printf("Доступные тесты:\n");
-    for(int i=0; i<amount_of_quizzes(); i++){
-	quiz = get_quizz(i);
-	printf("%d\n",quiz->quizzNumber+1);
+    for (int i = 0; i < amount_of_quizzes(); i++) {
+        quiz = get_quizz(i);
+        printf("%d\n", quiz->quizzNumber + 1);
     }
     printf("Введите Ваше имя:\n");
     if (input(string, 's') == NULL) {
-        printf("Не коректный ввод имени пользователя");
+        printf("Некорректный ввод имени пользователя\n");
         return NULL;
     }
     get_username(users, string);
     printf("Введите номер теста:\n");
     if (input(&num, 'd') == NULL) {
-        printf("Не коректный ввод номера текста");
+        printf("Некорректный ввод номера текста\n");
         return NULL;
     }
     quizz_select(users, &num);
@@ -110,11 +110,11 @@ struct user* run_quizz()
                quiz->question[questionCount].questionNumber);
         printf("%s \n", quiz->question[questionCount].questionText);
         print_answer_options(quiz, questionCount);
-        printf("Введите вариант ответа(Ответ должен быть введён с большой "
+        printf("Введите вариант ответа (ответ должен быть введён с большой "
                "буквы английского алфавита. Если вы хотите завершить тест "
                "досрочно напишите q):\n");
         if (input(&ch, 'c') == NULL) {
-            printf("Не коректный ввод варианта ответа");
+            printf("Некорректный ввод варианта ответа\n");
             return NULL;
         }
         get_answer(answer, optionCount, &ch);
