@@ -31,7 +31,7 @@ int amount_of_quizzes()
     return qMaxNumber;
 }
 
-struct quizz* get_quiz(int qNumber)
+struct quizz* get_quizz(int qNumber)
 {
     char* file = "data/quizz_data.csv";
     FILE* fp = fopen(file, "r");
