@@ -87,6 +87,25 @@ struct quizz* get_quizz(int qNumber)
     return q;
 }
 
+int fill_data_with_quizz(struct quizz *q) {
+  char *file = "data/quizz_data.csv";
+  FILE *fp = fopen(file, "a");
+  if (!fp) {
+    return -1;
+  }
+  for (int i = 1; strlen(q->question[i].questionText); i++) {
+    for (int j = 1; strlen(q->question[i].answerOptions[j].optionText); j++) {
+      fprintf(fp, "%d ,%s ,%d ,%s ,%c ,%s ,%d\n", q->quizzNumber, q->quizzName,
+              q->question[i].questionNumber, q->question[i].questionText,
+              q->question[i].answerOptions[j].optionLetter,
+              q->question[i].answerOptions[j].optionText,
+              q->question[i].answerOptions[j].isAnswerRight);
+    }
+  }
+  fclose(fp);
+  return 0;
+}
+
 struct user* get_user_data(char* userName, int quizzNum)
 {
     char* file = "data/user_data.csv";
