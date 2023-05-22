@@ -87,7 +87,12 @@ struct user* run_quizz()
     char* string = malloc(100);
     int questionCount = 0;
     int optionCount = 0;
-    printf("Введите ваше имя:\n");
+    printf("Доступные тесты:\n");
+    for(int i=0; i<amount_of_quizzes(); i++){
+	quiz = get_quizz(i);
+	printf("%d\n",quiz->quizzNumber+1);
+    }
+    printf("Введите Ваше имя:\n");
     if (input(string, 's') == NULL) {
         printf("Не коректный ввод имени пользователя");
         return NULL;
@@ -97,7 +102,6 @@ struct user* run_quizz()
     if (input(&num, 'd') == NULL) {
         printf("Не коректный ввод номера текста");
         return NULL;
-        ;
     }
     quizz_select(users, &num);
     quiz = get_quizz(users->quizzNum);
