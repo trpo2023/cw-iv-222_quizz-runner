@@ -10,8 +10,8 @@ CTEST(get_pass_percentage, сorrect_result)
     struct answers* answer_good = malloc(sizeof(*answer_good));
     struct user* users_bad = malloc(sizeof(*users_bad));
     struct answers* answer_bad = malloc(sizeof(*answer_bad));
-    answer_good->isCorrect[0]=1;
-    answer_bad->isCorrect[0]=(-100);
+    answer_good->isCorrect[0] = 1;
+    answer_bad->isCorrect[0] = (-100);
     int resultgood = get_pass_percentage(answer_good, users_good, 1);
     int resultbad = get_pass_percentage(answer_bad, users_bad, 1);
     ASSERT_EQUAL(-1, resultbad);
@@ -69,7 +69,7 @@ CTEST(check_answers, correct_answer)
     answer_good->answer[0] = 'A';
     answer_exit->answer[0] = 'q';
     answer_bad->answer[0] = 'P';
-    quiz->question[0].answerOptions[0].optionLetter='A';
+    quiz->question[0].answerOptions[0].optionLetter = 'A';
     int resultgood = check_answers(quiz, answer_good, 0, 0);
     int resultexit = check_answers(quiz, answer_exit, 0, 0);
     int resultbad = check_answers(quiz, answer_bad, 0, 0);
