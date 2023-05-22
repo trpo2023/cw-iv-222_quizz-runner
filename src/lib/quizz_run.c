@@ -88,7 +88,7 @@ struct user* run_quizz()
     int questionCount = 0;
     int optionCount = 0;
     printf("Доступные тесты:\n");
-    for(int i=0;i<amount_of_quizzes();i++){
+    for(int i=0; i<amount_of_quizzes(); i++){
 	quiz = get_quizz(i);
 	printf("%d\n",quiz->quizzNumber+1);
     }
