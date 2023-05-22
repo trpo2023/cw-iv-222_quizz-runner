@@ -132,3 +132,18 @@ struct user* get_user_data(char* userName, int quizzNum)
     free(user);
     return NULL;
 }
+
+int fill_data_with_user_data(struct user* user)
+{
+    char* file = "data/user_data.csv";
+    FILE* fp = fopen(file, "a");
+    if (!fp) {
+        return -1;
+    }
+    fprintf(fp,
+            "%s ,%d ,%d\n",
+            user->username,
+            user->quizzNum,
+            user->passPercentage);
+    return 0;
+}
