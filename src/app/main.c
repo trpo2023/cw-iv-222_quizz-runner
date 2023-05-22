@@ -11,11 +11,12 @@ int main()
     printf("Доступные команды:\n1 - Создать новый тест\n2 - Пройти тест\n");
     int command;
     scanf("%d", &command);
+    getchar();
     if (command == 1) {
-        quizz* new_quizz = malloc(sizeof(*new_quizz));
+        quizz* new_quizz;
         new_quizz = create_quizz();
-        new_quizz->quizzNumber = amount_of_quizzes() + 1;
         fill_data_with_quizz(new_quizz);
+        free(new_quizz);
     } else if (command == 2) {
         struct user* user = malloc(sizeof(*user));
         struct answers* answ = malloc(sizeof(*answ));
