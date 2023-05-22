@@ -1,8 +1,1 @@
-1 ,Pasha ,1 ,Gay ,A ,Yes ,1
-1 ,Pasha ,1 ,Gay ,B ,No ,0
-1 ,Pasha ,2 ,Beautiful ,A ,Yes ,1
-1 ,Pasha ,2 ,Beautiful ,B ,No ,0
-2 ,Git ,1 ,How to create a branch ,A ,Git init ,0
-2 ,Git ,1 ,How to create a branch ,B ,Git branch ,1
-2 ,Git ,2 ,How to move to a branch ,A ,Git hist ,0
-2 ,Git ,2 ,How to move to a branch ,B ,Git checkout ,1
+

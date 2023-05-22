@@ -138,6 +138,7 @@ struct user* get_user_data(char* userName, int quizzNum)
     int number;
     struct user* user = malloc(sizeof(*user));
     while (fscanf(fp, "%s ,%d ,%d", name, &number, &percent) != 0) {
+        *name = replace_with_spaces(name);
         if (strcmp(name, userName) == 0 && number == quizzNum) {
             strcpy(user->username, name);
             user->quizzNum = number;
@@ -156,6 +157,7 @@ int fill_data_with_user_data(struct user* user)
     if (!fp) {
         return -1;
     }
+    *user->username = replace_with_underline(user->username);
     fprintf(fp,
             "%s ,%d ,%d\n",
             user->username,

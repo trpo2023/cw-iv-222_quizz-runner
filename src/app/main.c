@@ -18,10 +18,11 @@ int main()
         fill_data_with_quizz(new_quizz);
         free(new_quizz);
     } else if (command == 2) {
-        struct user* user = malloc(sizeof(*user));
-        struct answers* answ = malloc(sizeof(*answ));
-        quizz* new_quizz = malloc(sizeof(*new_quizz));
-        run_quizz(answ, user, new_quizz);
+        struct user* user;
+        user = run_quizz();
+        if (user != NULL) {
+            fill_data_with_user_data(user);
+        }
     }
     return 0;
 }
