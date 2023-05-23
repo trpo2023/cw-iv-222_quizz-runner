@@ -15,7 +15,8 @@ int main()
     if (command == 1) {
         quizz* new_quizz;
         new_quizz = create_quizz();
-        fill_data_with_quizz(new_quizz);
+        if (new_quizz != NULL)
+            fill_data_with_quizz(new_quizz);
         free(new_quizz);
     } else if (command == 2) {
         struct user* user;
